@@ -1,6 +1,13 @@
 import Head from 'next/head';
+import { GetServerSideProps, NextPage } from 'next';
+import { posts } from './api/notion';
+import Link from 'next/link';
 
-export default function Home() {
+interface Props {
+  posts: [any];
+}
+
+const Home: NextPage<Props> = (props) => {
   return (
     <>
       <Head>
@@ -9,6 +16,31 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div>
+        {
+          props.posts.map((result, i) => (
+            <div key={i}>
+              <Link href={`/${result.id}`}>
+                {result.properties.Name.title[0].plain_text}
+              </Link>
+            </div>
+          ))
+        }
+      </div>
     </>
   );
+};
+
+export default Home;
+
+export async function getServerSideProps() {
+  console.log(process.env.NOTION_DATABASE_ID);
+
+  let { results } = await posts();
+  console.log(results);
+  return {
+    props: {
+      posts: results
+    }
+  };
 }
