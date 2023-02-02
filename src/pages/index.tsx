@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { GetServerSideProps, NextPage } from 'next';
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { posts } from './api/notion';
 import Link from 'next/link';
 
@@ -33,14 +33,12 @@ const Home: NextPage<Props> = (props) => {
 
 export default Home;
 
-export async function getServerSideProps() {
-  console.log(process.env.NOTION_DATABASE_ID);
-
+export const getStaticProps: GetStaticProps = async () => {
   let { results } = await posts();
-  console.log(results);
   return {
     props: {
       posts: results
-    }
+    },
+    revalidate: 30
   };
-}
+};
