@@ -75,8 +75,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     let page_result = await post(id);
     let { results } = await blocks(id);
 
-    console.log(page_result);
-    console.log(results);
     return {
         props: {
             id,
