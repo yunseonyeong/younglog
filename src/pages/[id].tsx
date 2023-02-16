@@ -50,6 +50,7 @@ const Post: NextPage<Props> = ({ id, post, blocks }) => {
                     <Link href="/">
                         Home
                     </Link>
+                    <div>하이</div>
                 </nav>
             </div>
             {
