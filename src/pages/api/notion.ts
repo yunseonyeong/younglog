@@ -12,9 +12,10 @@ async function post(id: string) {
   return myPost;
 }
 
-async function blocks(id: string) {
+async function blocks(id: string, start_cursor?: string) {
   const myBlocks = await notion.blocks.children.list({
-    block_id: id
+    block_id: id,
+    start_cursor: start_cursor
   });
   return myBlocks;
 }
