@@ -2,12 +2,48 @@ import Head from 'next/head';
 import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { posts } from './api/notion';
 import Link from 'next/link';
+import React from 'react';
+import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Image from 'next/image';
+import styled from 'styled-components';
+
+const { Header, Content, Sider } = Layout;
+
+const items1: MenuProps['items'] = ['1'].map((key) => ({
+  key,
+  label: `nav ${key}`,
+}));
+
+const items2: MenuProps['items'] = [UserOutlined].map(
+  (icon, index) => {
+    const key = String(index + 1);
+
+    return {
+      key: `sub${key}`,
+      icon: React.createElement(icon),
+      label: `글 목록`,
+
+      children: new Array(2).fill(null).map((_, j) => {
+        const subKey = index * 2 + j + 1;
+        return {
+          key: subKey,
+          label: `카테고리 ${subKey}`,
+        };
+      }),
+    };
+  },
+);
 
 interface Props {
   posts: [any];
 }
 
 const Home: NextPage<Props> = (props) => {
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
   return (
     <>
       <Head>
@@ -16,17 +52,60 @@ const Home: NextPage<Props> = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        {
-          props.posts.map((result, i) => (
-            <div key={i}>
-              <Link href={`/${result.id}`}>
-                {result.properties.Name.title[0].plain_text}
-              </Link>
-            </div>
-          ))
-        }
-      </div>
+      <Layout>
+        <Header className="header" style={{ 'backgroundColor': '#D6BBEC', 'display': 'flex', 'alignItems': 'center' }}>
+          <Link href="/">
+            <Logo>
+              <Image className='logo' src="/image/logo.png" alt="logo" width={120} height={30} />
+            </Logo>
+          </Link>
+        </Header>
+        <Layout>
+          <StyledSider width={200} style={{ background: '#D6BBEC', color: '#D6BBEC' }}>
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={['1']}
+              defaultOpenKeys={['sub1']}
+              style={{ height: '100%', borderRight: 0, }}
+              items={items2}
+            />
+          </StyledSider>
+          <Layout style={{ padding: '0 24px 24px' }}>
+            <PostCount>
+              {props.posts.length} 개의 글
+            </PostCount>
+            <Content
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
+                background: colorBgContainer,
+              }}
+            >
+              <div>
+                {
+                  props.posts.map((result, i) => (
+                    <CardRow key={i}>
+                      <TitleText>
+                        <Link href={`/${result.id}`}>
+                          {result.properties.Name.title[0].plain_text}
+                        </Link>
+                      </TitleText>
+                      <Center>
+                        <DateText>{result.properties.date.date.start}</DateText>
+                      </Center>
+                      <ImageDom>
+                        <Image src={result.properties.thumbnail.files[0] ? result.properties.thumbnail.files[0].file.url : '/image/postThumbnail.png'} alt="thumbnail" width="300" height="200"></Image>
+                      </ImageDom>
+                    </CardRow>
+                  ))
+                }
+              </div>
+            </Content>
+          </Layout>
+        </Layout>
+      </Layout>
+
     </>
   );
 };
@@ -42,3 +121,76 @@ export const getStaticProps = async () => {
     revalidate: 26400,
   };
 };
+
+const TitleText = styled.div`
+  font-size: 25px;
+  flex-basis: 60%;
+  
+`;
+
+const CardRow = styled.div`
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+  width: 100%;
+  height: 100%;
+  max-height: 250px;
+  padding: 20px 50px;
+  justify-content: space-between;
+  gap: 20px;
+`;
+
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  height: 30px;
+  & > logo {
+    cursor: pointer;
+  }
+`;
+
+const StyledSider = styled(Sider)`
+  .ant-menu-item.ant-menu-item-selected {
+    background-color:  #D6BBEC !important;
+    color: #FEFEFE !important;
+  }
+
+  .ant-menu-submenu-title {
+    color: #D6BBEC !important;
+  }
+  .ant-menu-item.ant-menu-item-active{
+    background-color:  #f8eeff !important;
+    color: #FEFEFE;
+  }
+
+`;
+
+const PostCount = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: gray;
+  margin: 20px 10px;
+`;
+
+const DateText = styled.div`
+  display: flex;
+  font-size: 12px;
+  color: gray;
+`;
+
+const Center = styled.div`
+  height: 200px;
+  flex-basis: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
+
+const ImageDom = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 300px;
+`;

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['https://s3.us-west-2.amazonaws.com'],
+    domains: ['s3.us-west-2.amazonaws.com'],
     minimumCacheTTL: 60,
   },
 };
