@@ -91,7 +91,7 @@ export const getStaticProps = async ({ params }: { params: { id: string; }; }) =
             post: page_result,
             blocks: results
         },
-        revalidate: 1,
+        revalidate: 26400,
     };
 };
 
