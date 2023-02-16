@@ -31,19 +31,19 @@ const Home: NextPage<Props> = (props) => {
         >
           {
             props.posts.map((result, i) => (
-              <CardRow key={i}>
-                <TitleText>
-                  <Link href={`/${result.id}`}>
+              <Link key={i} href={`/${result.id}`}>
+                <CardRow key={i}>
+                  <TitleText>
                     {result.properties.Name.title[0].plain_text}
-                  </Link>
-                </TitleText>
-                <Center>
-                  <DateText>{result.properties.date.date.start}</DateText>
-                </Center>
-                <ImageDom>
-                  <Image src={result.properties.thumbnail.files[0] ? result.properties.thumbnail.files[0].file.url : '/image/postThumbnail.png'} alt="thumbnail" width="300" height="200"></Image>
-                </ImageDom>
-              </CardRow>
+                  </TitleText>
+                  <Center>
+                    <DateText>{result.properties.date.date.start}</DateText>
+                  </Center>
+                  <ImageDom>
+                    <Image src={result.properties.thumbnail.files[0] ? result.properties.thumbnail.files[0].file.url : '/image/postThumbnail.png'} alt="thumbnail" width="300" height="200"></Image>
+                  </ImageDom>
+                </CardRow>
+              </Link>
             ))
           }
         </Content>
