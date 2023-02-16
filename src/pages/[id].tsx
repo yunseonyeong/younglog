@@ -76,12 +76,14 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     let page_result = await post(id);
     let { results } = await blocks(id);
 
+
     return {
         props: {
             id,
             post: page_result,
             blocks: results
-        }
+        },
+        revalidate: 1,
     };
 };
 

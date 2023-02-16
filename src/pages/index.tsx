@@ -33,11 +33,12 @@ const Home: NextPage<Props> = (props) => {
 
 export default Home;
 
-export async function getServerSideProps() {
+export const getStaticProps = async () => {
   let { results } = await posts();
   return {
     props: {
       posts: results
-    }
+    },
+    revalidate: 1,
   };
-}
+};
