@@ -3,7 +3,7 @@ import { posts } from './api/notion';
 import Link from 'next/link';
 import React from 'react';
 import { Layout, theme } from 'antd';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import styled from 'styled-components';
 
 const { Content } = Layout;
@@ -15,11 +15,11 @@ interface Props {
 const Home: NextPage<Props> = (props) => {
   return (
     <>
-      <Layout style={{ padding: '0 24px 24px' }}>
+      <HomeLayout>
         <PostCount>
           {props.posts.length} 개의 글
         </PostCount>
-        <Content
+        <StyledContent
           style={{
             padding: 24,
             margin: 0,
@@ -33,21 +33,33 @@ const Home: NextPage<Props> = (props) => {
             props.posts.map((result, i) => (
               <Link key={i} href={`/${result.id}`}>
                 <CardRow key={i}>
-                  <TitleText>
-                    {result.properties.Name.title[0].plain_text}
-                  </TitleText>
-                  <Center>
-                    <DateText>{result.properties.date.date.start}</DateText>
-                  </Center>
+                  <TextRow>
+                    <TitleText>
+                      {result.properties.Name.title[0].plain_text}
+                    </TitleText>
+                    <Center>
+                      <DateText>{result.properties.date.date.start}</DateText>
+                    </Center>
+                  </TextRow>
                   <ImageDom>
-                    <Image src={result.properties.thumbnail.files[0] ? result.properties.thumbnail.files[0].file.url : '/image/postThumbnail.png'} alt="thumbnail" width="300" height="200"></Image>
+                    <Image
+                      className='card'
+                      src={
+                        result.properties.thumbnail.files[0] ?
+                          result.properties.thumbnail.files[0].file.url :
+                          '/image/postThumbnail.png'}
+                      alt="thumbnail"
+                      layout="fill"
+                      objectFit='contain'
+
+                    />
                   </ImageDom>
                 </CardRow>
               </Link>
             ))
           }
-        </Content>
-      </Layout>
+        </StyledContent>
+      </HomeLayout>
     </>
   );
 };
@@ -64,6 +76,10 @@ export const getStaticProps = async () => {
   };
 };
 
+const HomeLayout = styled(Layout)`
+  padding: 20px;
+
+`;
 
 
 const PostCount = styled.div`
@@ -77,7 +93,9 @@ const PostCount = styled.div`
 const TitleText = styled.div`
   font-size: 25px;
   flex-basis: 60%;
-  
+  @media(max-width: 900px) {
+    font-size: 15px;
+  }
 `;
 
 const CardRow = styled.div`
@@ -88,6 +106,9 @@ const CardRow = styled.div`
   height: 100%;
   max-height: 250px;
   padding: 20px 50px;
+  @media(max-width: 900px) {
+    padding: 5px 10px;
+  }
   justify-content: space-between;
   gap: 20px;
   background-color: white;
@@ -97,6 +118,10 @@ const DateText = styled.div`
   display: flex;
   font-size: 12px;
   color: gray;
+  @media(max-width: 900px) {
+    font-size: 10px;
+    padding-left: 3px;
+  }
 `;
 
 const Center = styled.div`
@@ -113,5 +138,40 @@ const ImageDom = styled.div`
   justify-content: center;
   align-items: center;
   min-width: 300px;
+  width: 300px;
+  height: 200px;
+  position: relative;
+
+  @media(max-width: 1200px){
+    min-width: 100px;
+    width: 250px;
+    height: 150px;
+    overflow: hidden;
+  }
+  @media(max-width: 900px){
+    min-width: 100px;
+    width: 150px;
+    height: 130px;
+    overflow: hidden;
+  }
 `;
 
+
+
+const StyledContent = styled(Content)`
+@media(max-width: 900px) {
+   padding: 10px 0 !important;
+  }
+`;
+
+const TextRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-basis: 100%;
+  @media(max-width: 900px) {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 5px;
+  }
+`;

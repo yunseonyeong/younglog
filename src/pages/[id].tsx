@@ -1,6 +1,5 @@
-import { GetStaticPaths, NextPage, GetStaticProps } from "next";
-import Image from 'next/image';
-import Head from 'next/head';
+import { GetStaticPaths, NextPage } from "next";
+import Image from 'next/legacy/image';
 import { ParsedUrlQuery } from "querystring";
 import { post, posts, blocks } from './api/notion';
 import { useRouter } from "next/router";
@@ -125,6 +124,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 const Wrapper = styled.div`
   padding: 2rem 4rem;
+  width: 100%;
+  @media(max-width: 900px){
+    padding: 1rem;
+  }
 `;
 
 const Header = styled.div`
@@ -135,6 +138,11 @@ const Header = styled.div`
     width: 90%;
     border-bottom: 2px solid lightgray;
     margin-bottom: 2rem;
+    @media (max-width: 900px) {
+        flex-direction: column;
+        padding: 1rem 0;
+        width: 100%;
+    }
 `;
 
 const BigTitle = styled.div`
@@ -148,5 +156,9 @@ const DateText = styled.div`
     display: flex;
     align-items: center;
     color: gray;
-
+    @media (max-width: 900px){
+        width: 100%;
+        justify-content: flex-end;
+        padding: 0 0.5rem;
+    }
 `;

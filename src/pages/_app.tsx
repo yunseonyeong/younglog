@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import styled from 'styled-components';
 
 const { Header, Sider } = Layout;
@@ -51,14 +51,14 @@ function YoungBlog({ Component, pageProps }: AppProps) {
                 </Head>
                 <>
                     <Layout>
-                        <Header className="header" style={{ 'backgroundColor': '#D6BBEC', 'display': 'flex', 'alignItems': 'center' }}>
+                        <StyledHeader className="header" style={{ 'backgroundColor': '#D6BBEC', 'display': 'flex', 'alignItems': 'center' }}>
                             <Link href="/">
                                 <Logo>
                                     <Image className='logo' src="/image/logo.png" alt="logo" width={120} height={30} />
                                 </Logo>
                             </Link>
-                        </Header>
-                        <Layout>
+                        </StyledHeader>
+                        <StyledLayout>
                             <StyledSider width={200}>
                                 <Menu
                                     mode="inline"
@@ -69,7 +69,7 @@ function YoungBlog({ Component, pageProps }: AppProps) {
                                 />
                             </StyledSider>
                             <Component {...pageProps} />
-                        </Layout>
+                        </StyledLayout>
                     </Layout>
                 </>
             </QueryClientProvider>
@@ -90,6 +90,13 @@ const Logo = styled.div`
   & > logo {
     cursor: pointer;
   }
+`;
+
+const StyledLayout = styled(Layout)`
+    display: flex;
+    @media(max-width: 900px) {
+        width: 100% !important;
+    }
 `;
 
 const StyledSider = styled(Sider)`
@@ -116,4 +123,15 @@ const StyledSider = styled(Sider)`
     background-color:  #f8eeff !important;
     color: #FEFEFE;
   };
+
+  @media(max-width: 900px) {
+        display: none !important;
+    }
   `;
+
+
+const StyledHeader = styled(Header)`
+    @media (max-width: 900px){
+        justify-content: center;
+    }
+`;

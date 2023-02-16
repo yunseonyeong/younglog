@@ -21,10 +21,11 @@ const CodeBlockRenderer = ({ code, language }: { code: any; language: any; }) =>
 export default CodeBlockRenderer;
 
 const Wrapper = styled.div`
-    @media (min-width:900px) {
-        max-width: 75%;
+    @media (max-width: 900px){
+        max-width: 100%;
     }
     max-width: 90%;
    border-radius: 4%;
-   overflow: hidden;
+   overflow-x: scroll;
+
 `;
