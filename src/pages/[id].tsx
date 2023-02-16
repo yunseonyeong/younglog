@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { ParsedUrlQuery } from "querystring";
 import { post, posts, blocks } from './api/notion';
+import { useRouter } from "next/router";
 
 interface IParams extends ParsedUrlQuery {
     id: string;
@@ -37,7 +38,16 @@ const renderBlock = (block: any) => {
 };
 
 
-const Post: NextPage<Props> = ({ id, post, blocks }) => {
+
+const Post: NextPage<Props> = ({ post, blocks }) => {
+    const router = useRouter();
+    if (router.isFallback) {
+        return (
+            <>
+                <div>로딩중</div>
+            </>
+        );
+    }
     return (
         <div>
             <Head>
@@ -71,15 +81,13 @@ const Post: NextPage<Props> = ({ id, post, blocks }) => {
 
 export default Post;
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-    let { id } = ctx.params as IParams;
-    let page_result = await post(id);
-    let { results } = await blocks(id);
+export const getStaticProps = async ({ params }: { params: { id: string; }; }) => {
+    let page_result = await post(params.id);
+    let { results } = await blocks(params.id);
 
 
     return {
         props: {
-            id,
             post: page_result,
             blocks: results
         },
