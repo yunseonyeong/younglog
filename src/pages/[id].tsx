@@ -1,12 +1,11 @@
 import { GetStaticPaths, NextPage, GetStaticProps } from "next";
 import Image from 'next/image';
 import Head from 'next/head';
-import Link from 'next/link';
 import { ParsedUrlQuery } from "querystring";
 import { post, posts, blocks } from './api/notion';
 import { useRouter } from "next/router";
-import ReactMarkdown from 'react-markdown';
 import CodeBlockRenderer from "@components/CodeBlockRenderer";
+import styled from "styled-components";
 
 
 interface IParams extends ParsedUrlQuery {
@@ -58,12 +57,15 @@ const Post: NextPage<Props> = ({ post, blocks }) => {
         );
     }
     return (
-        <div>
-            <Head>
-                <title>
+        <Wrapper>
+            <Header>
+                <BigTitle>
                     {post.properties.Name.title[0].plain_text}
-                </title>
-            </Head>
+                </BigTitle>
+                <DateText>
+                    {post.properties.date.date.start}
+                </DateText>
+            </Header>
             {
                 blocks.map((block, index) => {
                     return (
@@ -77,7 +79,7 @@ const Post: NextPage<Props> = ({ post, blocks }) => {
                     );
                 })
             }
-        </div>
+        </Wrapper>
     );
 };
 
@@ -88,6 +90,7 @@ export const getStaticProps = async ({ params }: { params: { id: string; }; }) =
     let page_result = await post(params.id);
     let data = await blocks(params.id);
     let blockdata: any = [...data.results];
+
     while (data.has_more) {
         if (data.next_cursor) {
             data = await blocks(params.id, data.next_cursor);
@@ -118,4 +121,32 @@ export const getStaticPaths: GetStaticPaths = async () => {
         fallback: true
     };
 };
-;;
+
+
+const Wrapper = styled.div`
+  padding: 2rem 4rem;
+`;
+
+const Header = styled.div`
+    display: flex;
+    gap: 25px;
+    padding: 0 1rem 2rem 1rem;
+    justify-content: space-between;
+    width: 90%;
+    border-bottom: 2px solid lightgray;
+    margin-bottom: 2rem;
+`;
+
+const BigTitle = styled.div`
+    font-size: 40px;
+    font-weight: 700;
+`;
+
+const DateText = styled.div`
+    font-size: 13px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    color: gray;
+
+`;

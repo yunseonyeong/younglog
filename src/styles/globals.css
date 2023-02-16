@@ -43,9 +43,3 @@ a {
 * {
   box-sizing: border-box;
 }
-
-.default-screen {
-  background-color: #ffffff;
-  flex-direction: column;
-  display: flex;
-}
