@@ -102,7 +102,7 @@ export const getStaticProps = async ({ params }: { params: { id: string; }; }) =
             post: page_result,
             blocks: blockdata
         },
-        revalidate: 26400,
+        revalidate: 3600,
     };
 };
 

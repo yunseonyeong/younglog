@@ -51,7 +51,6 @@ const Home: NextPage<Props> = (props) => {
                       alt="thumbnail"
                       layout="fill"
                       objectFit='contain'
-
                     />
                   </ImageDom>
                 </CardRow>
@@ -72,7 +71,7 @@ export const getStaticProps = async () => {
     props: {
       posts: results
     },
-    revalidate: 26400,
+    revalidate: 3600,
   };
 };
 
