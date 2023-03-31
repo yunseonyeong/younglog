@@ -4,7 +4,7 @@ import { post, posts, blocks } from './api/notion';
 import { useRouter } from "next/router";
 import CodeBlockRenderer from "@components/CodeBlockRenderer";
 import styled from "styled-components";
-import { BulletedTag, Divider, Header1, Header2, Header3, ImageDom, NumberedItem, PTag } from "./BlockComponent";
+import { BulletedTag, Divider, Header1, Header2, Header3, ImageDom, NumberedItem, PTag } from "../styles/BlockComponent";
 import { GiDiamonds } from 'react-icons/gi';
 
 interface Props {
@@ -14,7 +14,6 @@ interface Props {
 }
 
 const renderBlock = (block: any) => {
-    console.log(block);
     switch (block.type) {
         case 'heading_1':
             // For a heading
