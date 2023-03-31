@@ -1,15 +1,11 @@
 import { GetStaticPaths, NextPage } from "next";
 import Image from 'next/legacy/image';
-import { ParsedUrlQuery } from "querystring";
 import { post, posts, blocks } from './api/notion';
 import { useRouter } from "next/router";
 import CodeBlockRenderer from "@components/CodeBlockRenderer";
 import styled from "styled-components";
-
-
-interface IParams extends ParsedUrlQuery {
-    id: string;
-}
+import { BulletedTag, Divider, Header1, Header2, Header3, ImageDom, NumberedItem, PTag } from "./BlockComponent";
+import { GiDiamonds } from 'react-icons/gi';
 
 interface Props {
     id: string,
@@ -18,26 +14,42 @@ interface Props {
 }
 
 const renderBlock = (block: any) => {
+    console.log(block);
     switch (block.type) {
         case 'heading_1':
             // For a heading
-            return <h1>{block['heading_1'].rich_text[0].plain_text} </h1>;
+            return <Header1>{block['heading_1'].rich_text[0].plain_text} </Header1>;
         case 'heading_2':
             // For a heading
-            return <h2>{block['heading_2'].rich_text[0].plain_text} </h2>;
+            return <Header2>{block['heading_2'].rich_text[0].plain_text} </Header2>;
         case 'heading_3':
             // For a heading
-            return <h3>{block['heading_3'].rich_text[0].plain_text} </h3>;
+            return <Header3>{block['heading_3'].rich_text[0].plain_text} </Header3>;
         case 'image':
-            return <Image src={block['image'].file.url} width={650} height={400} alt="" />;
+            return <ImageDom><Image src={block['image'].file.url} layout="fill" alt="" objectFit="contain"
+                objectPosition="center" /></ImageDom>;
         case 'code':
             return <CodeBlockRenderer code={block.code.rich_text[0].text.content} language={block['code'].language} />;
         case 'bulleted_list_item':
             // For an unordered list
-            return <ul><li>{block['bulleted_list_item'].rich_text[0].plain_text} </li></ul >;
+            return <BulletedTag><GiDiamonds />{block['bulleted_list_item'].rich_text[0].plain_text}</BulletedTag>;
         case 'paragraph':
-            // For a paragraph
-            return <p>{block['paragraph'].rich_text[0]?.text?.content} </p>;
+            if (block['paragraph'].rich_text.length == 0) {
+                return <br />;
+            }
+            return <PTag>{block['paragraph'].rich_text[0]?.text?.content} </PTag>;
+
+        case 'divider':
+            return <Divider />;
+
+        case 'numbered_list_item':
+            return <NumberedItem>
+                <li>
+                    {
+                        block['numbered_list_item'].rich_text[0]?.plain_text
+                    }
+                </li>
+            </NumberedItem>;
         default:
             // For an extra type
             return <p></p>;
@@ -68,13 +80,11 @@ const Post: NextPage<Props> = ({ post, blocks }) => {
             {
                 blocks.map((block, index) => {
                     return (
-                        <div key={index}>
-
-
+                        <Line key={index}>
                             {
                                 renderBlock(block)
                             }
-                        </div>
+                        </Line>
                     );
                 })
             }
@@ -102,7 +112,7 @@ export const getStaticProps = async ({ params }: { params: { id: string; }; }) =
             post: page_result,
             blocks: blockdata
         },
-        revalidate: 3000,
+        revalidate: 20,
     };
 };
 
@@ -161,4 +171,9 @@ const DateText = styled.div`
         justify-content: flex-end;
         padding: 0 0.5rem;
     }
+`;
+
+const Line = styled.div`
+    margin: 0;
+    padding: 0;
 `;
