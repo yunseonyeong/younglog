@@ -26,7 +26,7 @@ export const Divider = styled.hr`
 `;
 
 export const PTag = styled.p`
-    padding-left: 10px;
+    padding-left: 11px;
     font-size: 14.5px;
     font-family: 'Noto Sans';
 `;

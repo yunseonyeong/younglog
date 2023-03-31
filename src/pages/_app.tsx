@@ -7,7 +7,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
 import styled from 'styled-components';
-import SideBar from './SideBar';
+import SideBar from '../components/SideBar';
 
 function YoungBlog({ Component, pageProps }: AppProps) {
 
