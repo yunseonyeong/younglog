@@ -2,11 +2,9 @@ import { NextPage } from 'next';
 import { posts } from './api/notion';
 import Link from 'next/link';
 import React from 'react';
-import { Layout, theme } from 'antd';
 import Image from 'next/legacy/image';
 import styled from 'styled-components';
-
-const { Content } = Layout;
+import { Layout } from './_app';
 
 interface Props {
   posts: [any];
@@ -71,13 +69,13 @@ export const getStaticProps = async () => {
     props: {
       posts: results
     },
-    revalidate: 3000,
+    revalidate: 20,
   };
 };
 
 const HomeLayout = styled(Layout)`
   padding: 20px;
-
+  
 `;
 
 
@@ -157,7 +155,7 @@ const ImageDom = styled.div`
 
 
 
-const StyledContent = styled(Content)`
+const StyledContent = styled.div`
 @media(max-width: 900px) {
    padding: 10px 0 !important;
   }
