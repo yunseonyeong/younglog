@@ -5,37 +5,11 @@ import { RecoilRoot } from "recoil";
 import type { AppProps } from 'next/app';
 import React from 'react';
 import Link from 'next/link';
-import { UserOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Layout, Menu } from 'antd';
 import Image from 'next/legacy/image';
 import styled from 'styled-components';
-
-const { Header, Sider } = Layout;
+import SideBar from './SideBar';
 
 function YoungBlog({ Component, pageProps }: AppProps) {
-
-
-    const items2: MenuProps['items'] = [UserOutlined].map(
-        (icon, index) => {
-            const key = String(index + 1);
-
-            return {
-                key: `sub${key}`,
-                icon: React.createElement(icon),
-                label: `글 목록`,
-
-                children: new Array(2).fill(null).map((_, j) => {
-                    const subKey = index * 2 + j + 1;
-                    return {
-                        key: subKey,
-                        label: `카테고리 ${subKey}`,
-                    };
-                }),
-            };
-        },
-    );
-
 
     const queryClient = new QueryClient();
 
@@ -51,7 +25,7 @@ function YoungBlog({ Component, pageProps }: AppProps) {
                 </Head>
                 <>
                     <Layout>
-                        <StyledHeader className="header" style={{ 'backgroundColor': '#D6BBEC', 'display': 'flex', 'alignItems': 'center' }}>
+                        <StyledHeader>
                             <Link href="/">
                                 <Logo>
                                     <Image className='logo' src="/image/logo.png" alt="logo" width={120} height={30} />
@@ -59,15 +33,7 @@ function YoungBlog({ Component, pageProps }: AppProps) {
                             </Link>
                         </StyledHeader>
                         <StyledLayout>
-                            <StyledSider width={200}>
-                                <Menu
-                                    mode="inline"
-                                    defaultSelectedKeys={['1']}
-                                    defaultOpenKeys={['카테고리1']}
-                                    style={{ borderRight: 0, }}
-                                    items={items2}
-                                />
-                            </StyledSider>
+                            <SideBar menu={[{ to: '1', name: '카테고리1' }, { to: '2', name: '카테고리2' }, { to: '2', name: '카테고리3' }]} />
                             <Component {...pageProps} />
                         </StyledLayout>
                     </Layout>
@@ -92,46 +58,30 @@ const Logo = styled.div`
   }
 `;
 
+
+export const Layout = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+`;
+
 const StyledLayout = styled(Layout)`
     display: flex;
+    flex-direction: row;
     @media(max-width: 900px) {
-        width: 100% !important;
+        width: 100%;
     }
 `;
 
-const StyledSider = styled(Sider)`
-    .ant-menu-light.ant-menu-inline{
-        background-color: #F5F5F5 !important;
-
-    }
-    .ant-menu-item .ant-menu-item-only-child{
-        background-color: #F5F5F5 !important;
-    }
-    .ant-layout-sider-children {
-        background-color: #F5F5F5 !important;
-
-    }
-  .ant-menu-item.ant-menu-item-selected {
-    background-color:  #D6BBEC !important;
-    color: #FEFEFE !important;
-  }
-
-  .ant-menu-submenu-title {
-    color: #D6BBEC !important;
-  }
-  .ant-menu-item.ant-menu-item-active{
-    background-color:  #f8eeff !important;
-    color: #FEFEFE;
-  };
-
-  @media(max-width: 900px) {
-        display: none !important;
-    }
-  `;
 
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled.div`
     @media (max-width: 900px){
         justify-content: center;
     }
+    background-color: #D6BBEC;
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+
 `;
