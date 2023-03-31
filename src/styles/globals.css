@@ -9,6 +9,10 @@ body {
   margin: 0;
   font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP';
   padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 body:hover {
   overflow-y: scroll;
